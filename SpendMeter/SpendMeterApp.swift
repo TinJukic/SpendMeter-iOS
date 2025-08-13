@@ -11,7 +11,7 @@ import SwiftUI
 struct SpendMeterApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
         }
     }
 }
