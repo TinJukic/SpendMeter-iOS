@@ -13,5 +13,5 @@ public extension Font {
     static let body: Font = .system(size: 16, weight: .regular)
     static let secondaryText: Font = .system(size: 14, weight: .regular)
     static let button: Font = .system(size: 16, weight: .semibold)
-    static let balance: Font = .system(size: 28, weight: .bold)
+    static let balance: Font = .system(size: 36, weight: .bold)
 }
