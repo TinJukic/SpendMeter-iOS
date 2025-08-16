@@ -8,7 +8,8 @@
 import SwiftUI
 
 public struct HomeView: View {
-    @State private var balance: Float = 15000.00
+    @State private var balance: Balance = Balance(amount: 15000.00)
+    @State private var history: History = .mocked
 
     public var body: some View {
         NavigationStack {
@@ -34,23 +35,8 @@ extension HomeView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     currentBalanceView
-
-                    HStack {
-                        createButton(ofType: .init(title: "Add Income", color: .mainAppGreen, image: .init(systemName: "plus")), maxWidth: proxy.size.width / 2) {
-                            print("Add Income tapped")
-                        }
-                        Spacer()
-                        createButton(ofType: .init(title: "Make Payment", color: .warning, image: .init(systemName: "minus")), maxWidth: proxy.size.width / 2) {
-                            print("Make Payment tapped")
-                        }
-                    }
-
-                    Text("Recent Transactions")
-                        .font(.title)
-                        .foregroundStyle(.textPrimaryInverted)
-                        .multilineTextAlignment(.leading)
-                        .frame(alignment: .leading)
-
+                    buttonsView(width: proxy.size.width / 2)
+                    historyView
                     Spacer()
                 }
                 .padding(.top, 24)
@@ -64,7 +50,7 @@ extension HomeView {
 
     var currentBalanceView: some View {
         VStack(spacing: 12) {
-            Text(balance, format: .currency(code: Locale.current.currency?.identifier ?? "EUR"))
+            Text(balance.amount.formattedCurrency)
                 .font(.balance)
             Text("Current balance")
                 .font(.sectionTitle)
@@ -74,7 +60,35 @@ extension HomeView {
         .frame(maxWidth: .infinity)
         .background {
             RoundedRectangle(cornerRadius: 12.0)
-                .foregroundStyle(balance > 0 ? .mainAppGreen : .warning)
+                .foregroundStyle(balance.isPositive ? .mainAppGreen : .warning)
+        }
+    }
+
+    var historyView: some View {
+        VStack(alignment: .leading) {
+            Text("Recent Transactions")
+                .font(.title)
+                .foregroundStyle(.textPrimaryInverted)
+                .multilineTextAlignment(.leading)
+                .frame(alignment: .leading)
+
+            ForEach(history.transactions) { transaction in
+                Button(action: { print("Transaction tapped") }) {
+                    HistoryCellView(data: transaction)
+                }
+            }
+        }
+    }
+
+    func buttonsView(width: CGFloat) -> some View {
+        HStack {
+            createButton(ofType: .init(title: "Add Income", color: .mainAppGreen, image: .init(systemName: "plus")), maxWidth: width) {
+                print("Add Income tapped")
+            }
+            Spacer()
+            createButton(ofType: .init(title: "Make Payment", color: .warning, image: .init(systemName: "minus")), maxWidth: width) {
+                print("Make Payment tapped")
+            }
         }
     }
 
